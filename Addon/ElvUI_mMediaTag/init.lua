@@ -42,6 +42,7 @@ mMT.Modules.RoleIcons = {}
 mMT.Modules.Castbar = {}
 mMT.Modules.ImportantSpells = {}
 mMT.Modules.InterruptOnCD = {}
+mMT.Modules.CosmeticBars = {}
 --mMT.Modules.ObjectiveTracker = {}
 
 local defaultDB = {
@@ -113,6 +114,7 @@ local function EnableModules()
 	mMT.Modules.SummonIcon.enable = E.db.mMT.unitframeicons.summon.enable
 	mMT.Modules.Portraits.enable = E.db.mMT.portraits.general.enable
 	mMT.Modules.ImportantSpells.enable = (E.db.mMT.importantspells.enable and (E.db.mMT.importantspells.np or E.db.mMT.importantspells.uf))
+	mMT.Modules.CosmeticBars.enable = E.db.mMT.cosmeticbars.enable
 	--mMT.Modules.ObjectiveTracker.enable = E.db.mMT.objectivetracker.enable and (E.private.skins.blizzard.enable and E.private.skins.blizzard.objectiveTracker) and not IsAddOnLoaded("!KalielsTracker")
 
 	-- Retail
@@ -142,7 +144,11 @@ local function UpdateModules()
 	for name, module in pairs(mMT.Modules) do
 		if (not module.enable and module.loaded) or module.loaded or module.enable then
 			--mMT:Print(name, "Update", module.loaded, "Disable", (not module.enable and module.loaded), "Enable", module.enable)
-			module:Initialize()
+			if module.Initialize then
+				module:Initialize()
+			else
+				mMT:Print("Module not found:", module)
+			end
 
 			if module.needReloadUI and ((not module.enable and module.loaded) or (module.loaded and not module.enable)) then
 				--mMT:Print("RELOAD REQUIERED")
@@ -237,7 +243,7 @@ function mMT:Initialize()
 		end
 	end
 
-	if E.db.mMT.customclasscolors.emediaenable then
+	if E.db.mMT.general.emediaenable then
 		mMT:SetElvUIMediaColor()
 	end
 
@@ -263,6 +269,14 @@ function mMT:Initialize()
 
 	if (E.db.mMT.custombackgrounds.health.enable or E.db.mMT.custombackgrounds.power.enable or E.db.mMT.custombackgrounds.castbar.enable) and not mMT.ElvUI_EltreumUI.dark then
 		mMT:CustomBackdrop()
+	end
+
+	-- if E.db.mMT.customclasscolors.enable and not (mMT.ElvUI_EltreumUI.gradient or mMT.ElvUI_EltreumUI.dark) then
+	-- 	mMT:SetCustomColors()
+	-- end
+
+	if E.db.mMT.general.greeting then
+		mMT:GreetingText()
 	end
 end
 
@@ -312,19 +326,11 @@ function mMT:PLAYER_ENTERING_WORLD(event)
 	end
 
 	-- Initialize Modules
-	if E.db.mMT.general.greeting then
-		mMT:GreetingText()
-	end
-
 	if E.db.mMT.tooltip.enable then
 		mMT:TipIcon()
 	end
 
-	if E.db.mMT.customclasscolors.enable and not (mMT.ElvUI_EltreumUI.gradient or mMT.ElvUI_EltreumUI.dark) then
-		mMT:SetCustomColors()
-	end
-
-	if E.db.mMT.customclasscolors.emediaenable then
+	if E.db.mMT.general.emediaenable then
 		mMT:SetElvUIMediaColor()
 	end
 
