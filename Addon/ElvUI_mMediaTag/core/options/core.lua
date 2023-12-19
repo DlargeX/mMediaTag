@@ -307,6 +307,20 @@ local function configTable()
 						childGroups = "tab",
 						args = {},
 					},
+					datapanels = {
+						order = 8,
+						type = "group",
+						name = L["Datapanels"],
+						childGroups = "tab",
+						args = {},
+					},
+					questicons = {
+						order = 9,
+						type = "group",
+						name = L["Quest Icons"],
+						childGroups = "tab",
+						args = {},
+					},
 					textures = {
 						order = 20,
 						type = "group",
@@ -314,6 +328,14 @@ local function configTable()
 						args = {},
 					},
 				},
+			},
+			misc = {
+				order = 9,
+				type = "group",
+				name = L["Misc"],
+				icon = "Interface\\Addons\\ElvUI_mMediaTag\\media\\system\\misc.tga",
+				childGroups = "tab",
+				args = {},
 			},
 			about = {
 				order = 10,

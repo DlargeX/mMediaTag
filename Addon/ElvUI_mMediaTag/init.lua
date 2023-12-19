@@ -42,7 +42,9 @@ mMT.Modules.RoleIcons = {}
 mMT.Modules.Castbar = {}
 mMT.Modules.ImportantSpells = {}
 mMT.Modules.InterruptOnCD = {}
---mMT.Modules.ObjectiveTracker = {}
+mMT.Modules.CosmeticBars = {}
+mMT.Modules.QuestIcons = {}
+mMT.Modules.ObjectiveTracker = {}
 
 local defaultDB = {
 	mplusaffix = { affixes = nil, season = nil, reset = false, year = nil },
@@ -113,13 +115,15 @@ local function EnableModules()
 	mMT.Modules.SummonIcon.enable = E.db.mMT.unitframeicons.summon.enable
 	mMT.Modules.Portraits.enable = E.db.mMT.portraits.general.enable
 	mMT.Modules.ImportantSpells.enable = (E.db.mMT.importantspells.enable and (E.db.mMT.importantspells.np or E.db.mMT.importantspells.uf))
-	--mMT.Modules.ObjectiveTracker.enable = E.db.mMT.objectivetracker.enable and (E.private.skins.blizzard.enable and E.private.skins.blizzard.objectiveTracker) and not IsAddOnLoaded("!KalielsTracker")
+	mMT.Modules.CosmeticBars.enable = E.db.mMT.cosmeticbars.enable and not IsAddOnLoaded("ElvUI_NutsAndBolts")
 
 	-- Retail
 	if E.Retail then
+		mMT.Modules.ObjectiveTracker.enable = E.db.mMT.objectivetracker.enable and (E.private.skins.blizzard.enable and E.private.skins.blizzard.objectiveTracker) and not IsAddOnLoaded("!KalielsTracker")
 		mMT.Modules.Castbar.enable = (E.db.mMT.interruptoncd.enable or (E.db.mMT.importantspells.enable and (E.db.mMT.importantspells.np or E.db.mMT.importantspells.uf)) or E.db.mMT.castbarshield.enable)
 		mMT.Modules.RoleIcons.enable = E.db.mMT.roleicons.enable
 		mMT.Modules.InterruptOnCD.enable = E.db.mMT.interruptoncd.enable
+		mMT.Modules.QuestIcons.enable = E.db.mMT.questicons.enable
 	end
 
 	-- Wrath
@@ -142,7 +146,11 @@ local function UpdateModules()
 	for name, module in pairs(mMT.Modules) do
 		if (not module.enable and module.loaded) or module.loaded or module.enable then
 			--mMT:Print(name, "Update", module.loaded, "Disable", (not module.enable and module.loaded), "Enable", module.enable)
-			module:Initialize()
+			if module.Initialize then
+				module:Initialize()
+			else
+				mMT:Print("Module not found:", name, module)
+			end
 
 			if module.needReloadUI and ((not module.enable and module.loaded) or (module.loaded and not module.enable)) then
 				--mMT:Print("RELOAD REQUIERED")
@@ -210,34 +218,12 @@ function mMT:Initialize()
 			self:RegisterEvent("PLAYER_TALENT_UPDATE")
 		end
 
-		if (E.db.mMT.objectivetracker.enable or (E.db.mMT.objectivetracker.enable and E.db.mMT.objectivetracker.simple)) and E.private.skins.blizzard.enable and not IsAddOnLoaded("!KalielsTracker") then
-			if not E.private.skins.blizzard.objectiveTracker then
-				StaticPopupDialogs["mErrorSkin"] = {
-					text = L["ElvUI skin must be enabled to activate mMediaTag Quest skins! Should it be enabled?"],
-					button1 = L["Yes"],
-					button2 = L["No"],
-					timeout = 120,
-					whileDead = true,
-					hideOnEscape = false,
-					preferredIndex = 3,
-					OnAccept = function()
-						E.private.skins.blizzard.objectiveTracker = true
-						C_UI.Reload()
-					end,
-					OnCancel = function()
-						E.db.mMT.objectivetracker.enable = false
-						C_UI.Reload()
-					end,
-				}
-
-				StaticPopup_Show("mErrorSkin")
-			end
-
-			mMT:InitializemOBT()
+		if E.private.nameplates.enable and (E.db.mMT.nameplate.healthmarker.enable or E.db.mMT.nameplate.executemarker.enable) then
+			mMT:StartNameplateTools()
 		end
 	end
 
-	if E.db.mMT.customclasscolors.emediaenable then
+	if E.db.mMT.general.emediaenable then
 		mMT:SetElvUIMediaColor()
 	end
 
@@ -264,6 +250,14 @@ function mMT:Initialize()
 	if (E.db.mMT.custombackgrounds.health.enable or E.db.mMT.custombackgrounds.power.enable or E.db.mMT.custombackgrounds.castbar.enable) and not mMT.ElvUI_EltreumUI.dark then
 		mMT:CustomBackdrop()
 	end
+
+	-- if E.db.mMT.customclasscolors.enable and not (mMT.ElvUI_EltreumUI.gradient or mMT.ElvUI_EltreumUI.dark) then
+	-- 	mMT:SetCustomColors()
+	-- end
+
+	if E.db.mMT.general.greeting then
+		mMT:GreetingText()
+	end
 end
 
 local function CallbackInitialize()
@@ -284,6 +278,13 @@ function mMT:PLAYER_ENTERING_WORLD(event)
 		E.db.mMT.version = mMT.Version
 	end
 
+	-- ObjectiveTracker DB converter
+	if E.db.mMT.objectivetracker.convert < 1 then
+		mMT:ConvertDB()
+		E.db.mMT.objectivetracker.convert = 1
+		mMT:Print(L["The ObjectiveTracker settings have been reset to reflect the latest updates in mMT."])
+	end
+
 	-- DevMode
 	if mMT.DB.dev.enabled and mMT.DEVNames[UnitName("player")] then
 		mMT:Print("|CFFFFC900DEV - Tools:|r |CFF00E360enabld|r")
@@ -299,32 +300,17 @@ function mMT:PLAYER_ENTERING_WORLD(event)
 
 	-- Modules only for Retail
 	if E.Retail then
-		if E.Retail then
-
-			if E.private.nameplates.enable and (E.db.mMT.nameplate.healthmarker.enable or E.db.mMT.nameplate.executemarker.enable) then
-				mMT:StartNameplateTools()
-			end
+		if E.private.nameplates.enable and E.db.mMT.nameplate.executemarker.auto then
+			mMT:updateAutoRange()
 		end
 	end
 
-	if E.db.mMT.afk.enable then
-		mMT:RegisterEvent("PLAYER_FLAGS_CHANGED")
-	end
-
 	-- Initialize Modules
-	if E.db.mMT.general.greeting then
-		mMT:GreetingText()
-	end
-
 	if E.db.mMT.tooltip.enable then
 		mMT:TipIcon()
 	end
 
-	if E.db.mMT.customclasscolors.enable and not (mMT.ElvUI_EltreumUI.gradient or mMT.ElvUI_EltreumUI.dark) then
-		mMT:SetCustomColors()
-	end
-
-	if E.db.mMT.customclasscolors.emediaenable then
+	if E.db.mMT.general.emediaenable then
 		mMT:SetElvUIMediaColor()
 	end
 

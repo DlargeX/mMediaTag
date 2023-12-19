@@ -14,35 +14,22 @@ local change_log_important = {
 }
 
 local change_log_new = {
-	"Tags mHealth:noStatus, mHealth:noStatus:current-percent, mHealth:noStatus, mPower:percent:hideZero",
-	"Font Montserrat",
-	"Icons for Tags, role and Classification",
-	"Icons fr Role",
-	"Castbar background color for Castbar modules",
-	"Slider for Portrait offsets/ zoom",
-	"Datatext for first and second Profession",
-	"Datatext Durability and Ilevel in one",
-	"Chat backgrounds 7 - 13",
-	"Textures, mMT Blank and mMT Target",
+	"Customization for Nameplate Quest icons",
 }
 
 local change_log_update = {
-	"Changed Tag mTargetAbbrev to mTarget:abbrev and also add short Versions",
-	"Example Docks, and add ne examples XIV like, custom Dock, micro menu replacement",
-	"Font flags for ElvUI shadow flag",
-	"Removed golden-hearthstone-card-lord-jaraxxus from Teleports Datatext, thx Xheno",
-	"Removed Statusbar textures q5 and q6, dont liked them",
+	"Add Texture Settings to Custom Data panel colors",
+	"Season 3 Boss IDs",
+	"Removed Season 2 Teleports from Seasons list",
+	"Add a Background Button for XIV Bars",
+	"Add new Dock MaUI Styled XIV",
 }
 
 local change_log_fix = {
-	"Portraits Event updates to prevent wrong or empty Portraits",
-	"Nil error for custom Class colors",
-	"Nil error on custom Phase icon",
-	"Updates now correctly for Profession Datatext",
-	"AFK Screen for Classic Versions",
-	"Guild Dock, is not Updating correctly",
-	"Remove DEV tag",
-	"MediaPack Toc files"
+	"Removed Dev messages",
+	"Professions Datatext for Classic",
+	"Armor/ Ilevel Datatext for Classic",
+	"Crest Datatexts",
 }
 
 local function Concatenation(tbl, icon, color)
@@ -62,7 +49,7 @@ local function Concatenation(tbl, icon, color)
 end
 
 local function configTable()
-	local releasdate = "12.10.2023"
+	local releasdate = "08.11.2023"
 	--change_log_important_string = Concatenation(change_log_important)
 	change_log_new_string = Concatenation(change_log_new)
 	change_log_update_string = Concatenation(change_log_update)

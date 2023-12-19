@@ -3,10 +3,70 @@ local E = unpack(ElvUI)
 --Lua functions
 local format = format
 
+function mMT:ConvertDB()
+	E.db.mMT.objectivetracker = {
+		enable = false,
+		bar = {
+			fontsize = 12,
+			fontpoint = "CENTER",
+			elvbg = false,
+			gradient = true,
+			shadow = true,
+			hight = 18,
+		},
+		font = {
+			font = "PT Sans Narrow",
+			fontflag = "NONE",
+			highlight = 0.4,
+			color = {
+				title = { class = false, r = 1, g = 0.78, b = 0, hex = "|cffffc700" },
+				header = { class = false, r = 1, g = 0.78, b = 0, hex = "|cffffc700" },
+				text = { class = false, r = 0.87, g = 0.87, b = 0.87, hex = "|cff00ffa4" },
+				failed = { r = 1, g = 0.16, b = 0, hex = "|cffff2800" },
+				complete = { r = 0, g = 1, b = 0.27, hex = "|cff00ff45" },
+				good = { r = 0.25, g = 1, b = 0.43, hex = "|cff40ff6e" },
+				bad = { r = 0.92, g = 0.46, b = 0.1, hex = "|cffeb751a" },
+				transit = { r = 1, g = 0.63, b = 0.05, hex = "|cffffa10d" },
+			},
+			fontsize = {
+				header = 14,
+				title = 12,
+				text = 12,
+			},
+		},
+		settings = {
+			questcount = true,
+			hidedash = true,
+		},
+		dungeon = {
+			hidedash = true,
+			shadow = true,
+			difficulty = true,
+			color = {
+				chest3 = { a = { r = 0, g = 0.54, b = 1, a = 1 }, b = { r = 0, g = 0.71, b = 0.1, a = 1 } },
+				chest2 = { a = { r = 1, g = 0.73, b = 0, a = 1 }, b = { r = 1, g = 0.49, b = 0, a = 1 } },
+				chest1 = { a = { r = 1, g = 0, b = 0.14, a = 1 }, b = { r = 1, g = 0.33, b = 0, a = 1 } },
+			},
+		},
+		headerbar = {
+			enable = true,
+			gradient = true,
+			shadow = true,
+			texture = "Solid",
+			color = { r = 1, g = 0.78, b = 0, a = 1 },
+			class = true,
+		},
+	}
+end
+
 function mMT:DebugPrintTable(tbl)
-	print(mMT.Name .. ": Table Start >>>")
-	for k, v in pairs(tbl) do
-		print(k, v)
+	mMT:Print(": Table Start >>>")
+	if type(tbl) == "table" then
+		for k, v in pairs(tbl) do
+			print(k, v)
+		end
+	else
+		mMT:Print("Not a Table:", tbl)
 	end
 end
 
@@ -74,6 +134,15 @@ function mMT:GetClassColor(unit)
 	if UnitIsPlayer(unit) then
 		local _, unitClass = UnitClass(unit)
 		local cs = E.oUF.colors.class[unitClass]
-		return (cs and E:RGBToHex(cs.r, cs.g, cs.b)) or '|cFFcccccc'
+		return (cs and E:RGBToHex(cs.r, cs.g, cs.b)) or "|cFFcccccc"
 	end
+end
+
+function mMT:SetElvUIMediaColor()
+	local color = E:ClassColor(E.myclass)
+	E.db.general.valuecolor["r"] = color.r
+	E.db.general.valuecolor["g"] = color.g
+	E.db.general.valuecolor["b"] = color.b
+	E.db.general.valuecolor["a"] = 1
+	E:UpdateAll()
 end
