@@ -268,12 +268,12 @@ local function configTable()
 						name = L["Custom Unitframe Backgrounds"],
 						args = {},
 					},
-					classcolor = {
-						order = 3,
-						type = "group",
-						name = L["Custom Class colors"],
-						args = {},
-					},
+					-- classcolor = {
+					-- 	order = 3,
+					-- 	type = "group",
+					-- 	name = L["Custom Class colors"],
+					-- 	args = {},
+					-- },
 					roleicons = {
 						order = 4,
 						type = "group",
@@ -329,14 +329,14 @@ local function configTable()
 					},
 				},
 			},
-			misc = {
-				order = 9,
-				type = "group",
-				name = L["Misc"],
-				icon = "Interface\\Addons\\ElvUI_mMediaTag\\media\\system\\misc.tga",
-				childGroups = "tab",
-				args = {},
-			},
+			-- misc = {
+			-- 	order = 9,
+			-- 	type = "group",
+			-- 	name = L["Misc"],
+			-- 	icon = "Interface\\Addons\\ElvUI_mMediaTag\\media\\system\\misc.tga",
+			-- 	childGroups = "tab",
+			-- 	args = {},
+			-- },
 			about = {
 				order = 10,
 				type = "group",

@@ -14,22 +14,20 @@ local change_log_important = {
 }
 
 local change_log_new = {
-	"Customization for Nameplate Quest icons",
+	"Dock Icon for Mail",
 }
 
 local change_log_update = {
-	"Add Texture Settings to Custom Data panel colors",
-	"Season 3 Boss IDs",
-	"Removed Season 2 Teleports from Seasons list",
-	"Add a Background Button for XIV Bars",
-	"Add new Dock MaUI Styled XIV",
+	"NEW Objectivetracker Skin, complete rework and more simplified",
+	"Add Time Rifts to Instance Difficulty",
+	"Color Settings for Datatext Durability/ Itemlevel",
+	"Update Health Markers for S3",
 }
 
 local change_log_fix = {
-	"Removed Dev messages",
-	"Professions Datatext for Classic",
-	"Armor/ Ilevel Datatext for Classic",
-	"Crest Datatexts",
+	"DOTI Telleport ID for TP Datatext",
+	"TAG mClass:icon:noelite",
+	"Compatibility fix for cosmetic bars with ElvUI_NutsAndBolts"
 }
 
 local function Concatenation(tbl, icon, color)
@@ -49,7 +47,7 @@ local function Concatenation(tbl, icon, color)
 end
 
 local function configTable()
-	local releasdate = "08.11.2023"
+	local releasdate = "27.12.2023"
 	--change_log_important_string = Concatenation(change_log_important)
 	change_log_new_string = Concatenation(change_log_new)
 	change_log_update_string = Concatenation(change_log_update)
