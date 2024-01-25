@@ -549,7 +549,10 @@
         "HasNewMail",
         "GetLatestThreeSenders",
         "ResetCPUUsage",
-        "SetPortraitTexture"
+        "SetPortraitTexture",
+        "CLASS_ICON_TCOORDS",
+        "GetIconForRole",
+        "RAID_CLASS_COLORS"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"
@@ -571,6 +574,7 @@
         "chromie",
         "Chromie",
         "classcolors",
+        "classicons",
         "colora",
         "colorb",
         "colorhc",
